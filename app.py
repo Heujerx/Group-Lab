@@ -22,7 +22,7 @@ def mason():
         socials=[{"label":"GitHub","url":"https://github.com/MasonCable"},
                  {"label":"LinkedIn","url":"https://www.linkedin.com/in/masonscable/"}],
         stats=[{"label":"Known Birds","value":12},{"label":"Birds Owned","value":0},{"label":"Birds Sighted","value":3456}],
-        skills=["Python","TypeScript","AWS","Postgres","Vue","React"],
+        skills=["Birds", "Chickens", "Turkeys", "Sparrow"],
         
         
         education=[{"institution":"Dunwoody College","degree":"B.S.","field":"Cybersecurity","start":"2025","end":None}],
