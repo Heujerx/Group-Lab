@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ user.name or "Your Name" }} — Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #0f172a;        /* slate-900 */
+      --card: #111827;      /* gray-900 */
+      --muted: #94a3b8;     /* slate-400 */
+      --text: #e5e7eb;      /* gray-200 */
+      --accent: #38bdf8;    /* sky-400 */
+      --chip: #1f2937;      /* gray-800 */
+      --chip-border: #334155; /* slate-700 */
+      --ring: rgba(56,189,248,.35);
+    }
+    @media (prefers-color-scheme: light) {
+      :root{
+        --bg:#f8fafc; --card:#ffffff; --muted:#475569; --text:#0f172a;
+        --accent:#0ea5e9; --chip:#f1f5f9; --chip-border:#e2e8f0; --ring:rgba(14,165,233,.25);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(60rem 60rem at 50% -10%, rgba(56,189,248,.08), transparent), var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1100px; margin-inline:auto; padding:24px;}
+
+    .header{
+      display:grid; grid-template-columns: 128px 1fr; gap:24px; align-items:center;
+      background:linear-gradient(180deg, rgba(56,189,248,.12), rgba(56,189,248,0)) , var(--card);
+      border:1px solid var(--chip-border); border-radius:18px; padding:24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    }
+    .avatar{
+      width:128px; height:128px; border-radius:16px; object-fit:cover;
+      border:2px solid var(--chip-border); background:#0001;
+    }
+    .headline{display:flex; flex-direction:column; gap:8px}
+    .name{font-size: clamp(22px, 4vw, 30px); font-weight:700; letter-spacing:.2px}
+    .role{color:var(--muted); font-size:15px}
+    .meta{display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; color:var(--muted); font-size:14px}
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--chip); border:1px solid var(--chip-border); color:var(--muted);
+      padding:6px 10px; border-radius:999px; font-size:13px;
+    }
+    .actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      border:1px solid var(--chip-border); background:var(--chip); color:var(--text);
+      padding:10px 14px; border-radius:12px; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      transition: transform .02s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .btn:hover{border-color:var(--accent); box-shadow:0 0 0 6px var(--ring); text-decoration:none}
+    .btn.primary{background:linear-gradient(180deg, rgba(56,189,248,.18), rgba(56,189,248,.05)); border-color:rgba(56,189,248,.6)}
+
+    .grid{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap:24px; margin-top:24px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .header{grid-template-columns: 96px 1fr}
+      .avatar{width:96px; height:96px}
+    }
+    .card{
+      background:var(--card); border:1px solid var(--chip-border); border-radius:18px; padding:20px;
+    }
+    .card h2{
+      margin:0 0 12px 0; font-size:18px; letter-spacing:.2px
+    }
+    .muted{color:var(--muted)}
+    .about p{margin:0}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      background:var(--chip); color:var(--text); border:1px solid var(--chip-border);
+      padding:6px 10px; border-radius:999px; font-size:13px
+    }
+    .list{display:flex; flex-direction:column; gap:14px}
+    .item{display:grid; grid-template-columns: 1fr auto; gap:6px; padding:12px; border:1px dashed var(--chip-border); border-radius:14px}
+    .item-title{font-weight:600}
+    .item-sub{font-size:13px; color:var(--muted)}
+    .item-date{font-size:12px; color:var(--muted)}
+    .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+    .stat{background:var(--chip); border:1px solid var(--chip-border); border-radius:14px; padding:16px; text-align:center}
+    .stat .num{font-size:22px; font-weight:800}
+    .links{display:flex; flex-wrap:wrap; gap:8px}
+    .projects{display:grid; grid-template-columns: repeat(2,1fr); gap:12px}
+    @media (max-width:700px){ .projects{grid-template-columns:1fr} }
+    .project{padding:14px; border:1px solid var(--chip-border); border-radius:14px; background:var(--chip)}
+    .footer{margin-top:24px; text-align:center; color:var(--muted); font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header / Hero -->
+    <section class="header">
+      <img class="avatar" alt="Avatar"
+           src="{{ user.avatar_url or url_for('static', filename='img/default-avatar.png') }}">
+      <div class="headline">
+        <div class="name">
+          {{ user.name or "Your Name" }}
+          {% if user.verified %}<span class="badge">✔ Verified</span>{% endif %}
+        </div>
+        {% if user.role or user.company %}
+          <div class="role">
+            {{ user.role }}{% if user.company %} @ {{ user.company }}{% endif %}
+          </div>
+        {% endif %}
+        <div class="meta">
+          {% if user.location %}<span>📍 {{ user.location }}</span>{% endif %}
+          {% if user.email %}<span>✉️ <a href="mailto:{{ user.email }}">{{ user.email }}</a></span>{% endif %}
+          {% if user.website %}<span>🌐 <a href="{{ user.website }}" target="_blank" rel="noopener">Website</a></span>{% endif %}
+          {% if user.available_for_hire %}<span class="badge">Available for hire</span>{% endif %}
+        </div>
+        <div class="actions">
+          {% if user.cta_url %}
+            <a class="btn primary" href="{{ user.cta_url }}" target="_blank" rel="noopener">{{ user.cta_label or "Contact Me" }}</a>
+          {% endif %}
+          {% if socials %}
+            {% for s in socials %}
+              <a class="btn" href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <section class="grid">
+
+      <!-- Left column -->
+      <div class="col-left">
+
+        <!-- About -->
+        <div class="card about">
+          <h2>About</h2>
+          <p class="muted">
+            {{ user.about or "Write a short bio here. Share your mission, what you’re building, or what you’re looking for." }}
+          </p>
+        </div>
+
+
+      </div>
+
+      <!-- Right column -->
+      <div class="col-right">
+
+        <!-- Stats -->
+        {% if stats %}
+        <div class="card">
+          <h2>Stats</h2>
+          <div class="stats">
+            {% for s in stats %}
+              <div class="stat">
+                <div class="num">{{ s.value }}</div>
+                <div class="muted">{{ s.label }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+    
+
+  
+
+  
+
+      </div>
+    </section>
+
+    <div class="footer">
+      {% if user.updated_at %}Last updated {{ user.updated_at }} • {% endif %}
+      © {{ current_year or now().year }} {{ user.name or "Your Name" }}
+    </div>
+  </div>
+</body>
+</html>
