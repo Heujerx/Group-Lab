@@ -10,9 +10,17 @@
 
 </head>
 <body>
+    <header> 
+        <h1>Welcome to our group project!</h1>
+    </header>
+
     <nav>
+        <a href="{{ url_for('Home') }}">Home Page</a>
+        <a href="{{ url_for('mason') }}">Mason's Page</a>
+        <a href="{{ url_for('jeremiah') }}">Jeremiah's Page</a>
         <a href="{{ url_for('profile') }}">Profile Form</a> |
         <a href="{{ url_for('feedback') }}">Feedback Form</a>
+
     </nav>
     <hr>
     {% block content %}{% endblock %}

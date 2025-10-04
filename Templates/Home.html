@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Home Page -Group Project{% endblock %}
+
+{% block content %}
+    <p>The following members of this group goes as follows:</p>
+    <p> Brent, Garrett, Jeremiah, and Mason</p>
+
+<div class="img">
+    <img src = "{{url_for('static', filename='4birds.png') }}">
+</div>
+
+<a href="{{ url_for('profile') }}"></a>
+    {% endblock %}

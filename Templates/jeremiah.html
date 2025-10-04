@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Meet the bird at home!{% endblock %}
+
+{% block content %}
+    <div style="border:5px solid white">
+
+        <div class="profile-containter">
+        <div class="profile-photo">
+            <img src = "{{ url_for('static', filename='CiaoCiao1.png') }}">  
+        </div>
+        <p class="profile-name">Ciao Ciao!</p>
+        </div>
+
+
+        <p>Hi, my name is Ciao Ciao and I am a Blue Rose-Ringed Parakeet!</p>
+        <p>I am 2 years old, and for my species, if under the care of bird enthusiests like Jeremiah's Father in Law, my friends and I can live a long life between 20 to 30 years! At home, my diet includes seeds that are specifically blended for my robust diet with a healthy rotation of fruits native to Asia similarly to what we would eat in the wild.</p>
+        <p>I enjoy whistling, climbing, but most of all talking. One of my favorite phrases to say is, "What's up bud!" and "Whatchu doin?". Sometimes I even scare my family by imitating the smoke detector alarm after an intense dinner preparation. It tends to add to the chaos.</p>
+        <p>I enjoy being a part of my family and I know they love me too. If you'd like to hear me whitsle, watch my video! </p>
+
+        
+        <div>
+        <video controls src ="{{ url_for('static', filename='CiaoCiaoTalk.MOV') }}" width="500">
+        </video>
+        </div>    
+
+    </div>
+
+
+
+
+<a href="{{ url_for('profile') }}"></a>
+    {% endblock %}

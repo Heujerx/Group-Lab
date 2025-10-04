@@ -4,6 +4,14 @@ app = Flask(__name__)
 
 app.secret_key = 'top-secret'
 
+@app.route('/Home')
+def Home():
+    return render_template('Home.html')
+
+@app.route('/jeremiah')
+def jeremiah():
+    return render_template('jeremiah.html')
+
 @app.route('/')
 def index():
     return redirect(url_for('profile'))
