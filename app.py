@@ -12,8 +12,15 @@ def Home():
 def jeremiah():
     return render_template('jeremiah.html')
 
-@app.route('/garrett')
+@app.route('/garrett', methods=['GET', 'POST'])
 def garrett():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        inquiry = request.form.get('rel')
+        # Here you could add code to handle the form data
+        # For now, we'll just return the template with a success message
+        return render_template('garrett.html', success=True)
     return render_template('garrett.html')
 
 @app.route('/brent')

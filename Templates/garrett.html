@@ -20,7 +20,10 @@
 
 
 {% if error %}
-<p class ="error">{{ error }}</p>
+<p class="error">{{ error }}</p>
+{% endif %}
+{% if success %}
+<p class="success">Thank you for your interest! We'll be in touch soon.</p>
 {% endif %}
 
 <form action="" method="post">
@@ -49,7 +52,4 @@
     </div>
   </div>
 </form>
-
-<a href="{{ url_for('profile') }}"></a>
 {% endblock %}
-
