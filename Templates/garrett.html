@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>The Common Loon</h2>
+
+<p>The bones of most birds are hollow and light, but loons have solid bones.</p>
+<p>The extra weight helps them dive as deep as 250 feet to search for food. They can stay underwater for up to five minutes.</p>
+<p>Because their bodies are heavy relative to their wing size, loons need a 100- to 600-foot "runway" in order to take off from a lake.</p>
+<p>Loons can fly more than 75 miles per hour.</p>
+<p>Scientists think loons can live for 30 years or more</p>
+
+
+
+<p>For more information on the common loon, fill out the form below!</p>
+
+
+
+
+
+
+
+{% if error %}
+<p class ="error">{{ error }}</p>
+{% endif %}
+
+<form action="" method="post">
+    <div>
+        <label for="name">Name *:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+        <label for="email">Email *:</label>
+        <input type="email" id="email" name ="email" required></input>
+    </div>
+    <div>
+        <label for="rel">Area of inquiry *:</label>
+        <select id="rel" name="rel" required>
+            <option value="">What would you like to know?</option>
+            <option value="diet">Diet</option>
+            <option value="location">Where they can be found</option>
+            <option value="behavior">Behavior</option>
+            <option value="predators">Predators</option>
+            <option value="fun facts">More fun facts</option>
+        </select>
+    </div>
+   
+    <div>
+        <button type="submit">Save Profile</button>
+    </div>
+  </div>
+</form>
+
+<a href="{{ url_for('profile') }}"></a>
+{% endblock %}
+

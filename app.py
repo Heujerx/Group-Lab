@@ -12,6 +12,10 @@ def Home():
 def jeremiah():
     return render_template('jeremiah.html')
 
+@app.route('/garrett')
+def garrett():
+    return render_template('garrett.html')
+
 @app.route('/')
 def index():
     return redirect(url_for('profile'))
