@@ -1,9 +1,27 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     background: linear-gradient(to right, #CAD5E3, #7B9FCF)
+}
+
+.bird-card {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.bird-card h3 {
+    margin: 10px 0;
+    color: #2c3e50;
+}
+
+.bird-card p {
+    color: #7f8c8d;
+    margin-bottom: 10px;
 }
 .error {color: red;
 }

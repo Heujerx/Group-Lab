@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="border:5px solid white; padding: 20px;">
+        <h2>Four Amazing Birds!</h2>
+        
+        <p>Here are four incredible birds that showcase nature's diversity:</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">
+            <div class="bird-card">
+                <img src="{{ url_for('static', filename='eagle.jpg') }}" style="width: 100%; height: 300px; object-fit: cover;">
+                <h3>The Majestic Eagle</h3>
+                <p>Symbol of strength and freedom</p>
+            </div>
+            
+            <div class="bird-card">
+                <img src="{{ url_for('static', filename='macaw.jpg') }}" style="width: 100%; height: 300px; object-fit: cover;">
+                <h3>The Colorful Macaw</h3>
+                <p>Bringing vibrant colors to the rainforest</p>
+            </div>
+            
+            <div class="bird-card">
+                <img src="{{ url_for('static', filename='owl.jpg') }}" style="width: 100%; height: 300px; object-fit: cover;">
+                <h3>The Wise Owl</h3>
+                <p>Master of the night</p>
+            </div>
+            
+            <div class="bird-card">
+                <img src="{{ url_for('static', filename='hummingbird.jpg') }}" style="width: 100%; height: 300px; object-fit: cover;">
+                <h3>The Graceful Hummingbird</h3>
+                <p>Smallest of all birds</p>
+            </div>
+        </div>
+
+        <p style="margin-top: 20px;">Birds are amazing creatures that can fly, sing, and brighten our world!</p>
+    </div>
+{% endblock %}
