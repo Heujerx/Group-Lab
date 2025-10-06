@@ -1,8 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 
 app = Flask(__name__)
 
 app.secret_key = 'top-secret'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///listofbirds.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+class Bird(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    species = db.Column(db.String(25), nullable=False)
+    location = db.Column(db.String(25), nullable=False)
+    endangered = db.Column(db.Boolean, default=False)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    def __repr__(self):
+        return f'<Bird {self.species}>'
+    
+with app.app_context():
+    try:
+        db.create_all()
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
 
 @app.route('/Home')
 def Home():
@@ -31,6 +52,51 @@ def brent():
 def index():
     return redirect(url_for('Home'))
 
+@app.route('/birds', methods=['GET', 'POST'])
+def birds():
+    if request.method == 'POST':
+        species = request.form.get('species')
+        location = request.form.get('location')
+        endangered = bool(request.form.get('endangered'))
+        
+        new_bird = Bird(species=species, location=location, endangered=endangered)
+        try:
+            db.session.add(new_bird)
+            db.session.commit()
+            return redirect(url_for('birds'))
+        except Exception as e:
+            print(f"Error adding bird: {e}")
+            return "There was an error adding the bird"
+    
+    birds = Bird.query.order_by(Bird.date_added.desc()).all()
+    return render_template('birds.html', birds=birds)
+
+@app.route('/bird/<int:id>/delete', methods=['POST'])
+def delete_bird(id):
+    bird = Bird.query.get_or_404(id)
+    try:
+        db.session.delete(bird)
+        db.session.commit()
+        return redirect(url_for('birds'))
+    except Exception as e:
+        print(f"Error deleting bird: {e}")
+        return "There was an error deleting the bird"
+
+@app.route('/bird/<int:id>/update', methods=['GET', 'POST'])
+def update_bird(id):
+    bird = Bird.query.get_or_404(id)
+    if request.method == 'POST':
+        bird.species = request.form.get('species')
+        bird.location = request.form.get('location')
+        bird.endangered = bool(request.form.get('endangered'))
+        try:
+            db.session.commit()
+            return redirect(url_for('birds'))
+        except Exception as e:
+            print(f"Error updating bird: {e}")
+            return "There was an error updating the bird"
+    
+    return render_template('update_bird.html', bird=bird)
 
 @app.route("/mason")
 def mason():
@@ -52,3 +118,6 @@ def mason():
         contact=[{"label":"Email Me","href":"mailto:jane@example.com"}],
         current_year=2025
     )
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Bird Sightings</h2>
+    
+    <!-- Add Bird Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Add New Bird</h3>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="species" class="form-label">Species</label>
+                    <input type="text" class="form-control" id="species" name="species" required>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="endangered" name="endangered">
+                    <label class="form-check-label" for="endangered">Endangered</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Bird</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bird List -->
+    <div class="card">
+        <div class="card-body">
+            <h3>Recorded Birds</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Species</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if birds %}
+                            {% for bird in birds %}
+                            <tr>
+                                <td>{{ bird.species }}</td>
+                                <td>{{ bird.location }}</td>
+                                <td>{% if bird.endangered %}Endangered{% else %}Not Endangered{% endif %}</td>
+                                <td>{{ bird.date_added.strftime('%Y-%m-%d') if bird.date_added else '' }}</td>
+                                <td>
+                                    <a href="{{ url_for('update_bird', id=bird.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="{{ url_for('delete_bird', id=bird.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No birds recorded yet.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

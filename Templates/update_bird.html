@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Update Bird</h2>
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="species" class="form-label">Species</label>
+                    <input type="text" class="form-control" id="species" name="species" value="{{ bird.species }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" value="{{ bird.location }}" required>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="endangered" name="endangered" {% if bird.endangered %}checked{% endif %}>
+                    <label class="form-check-label" for="endangered">Endangered</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Bird</button>
+                <a href="{{ url_for('birds') }}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
