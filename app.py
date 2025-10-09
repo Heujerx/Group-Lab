@@ -18,10 +18,21 @@ class Bird(db.Model):
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     def __repr__(self):
         return f'<Bird {self.species}>'
+        
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+    page_origin = db.Column(db.String(20), nullable=False)  # To track which page the form was submitted from
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    def __repr__(self):
+        return f'<Contact {self.name} from {self.page_origin}>'
     
 with app.app_context():
     try:
         db.create_all()
+        print("Database tables created successfully.")
     except Exception as e:
         print(f"Error creating database tables: {e}")
 
@@ -29,8 +40,22 @@ with app.app_context():
 def Home():
     return render_template('Home.html')
 
-@app.route('/jeremiah')
+@app.route('/jeremiah', methods=['GET', 'POST'])
 def jeremiah():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        
+        new_contact = Contact(name=name, email=email, message=message, page_origin='jeremiah')
+        try:
+            db.session.add(new_contact)
+            db.session.commit()
+            return render_template('jeremiah.html', success=True)
+        except Exception as e:
+            print(f"Error adding contact: {e}")
+            return render_template('jeremiah.html', error="There was an error submitting your form")
+    
     return render_template('jeremiah.html')
 
 @app.route('/garrett', methods=['GET', 'POST'])
@@ -39,13 +64,35 @@ def garrett():
         name = request.form.get('name')
         email = request.form.get('email')
         inquiry = request.form.get('rel')
-        # Here you could add code to handle the form data
-        # For now, we'll just return the template with a success message
-        return render_template('garrett.html', success=True)
+        
+        new_contact = Contact(name=name, email=email, message=inquiry, page_origin='garrett')
+        try:
+            db.session.add(new_contact)
+            db.session.commit()
+            return render_template('garrett.html', success=True)
+        except Exception as e:
+            print(f"Error adding contact: {e}")
+            return render_template('garrett.html', error="There was an error submitting your form")
+            
     return render_template('garrett.html')
 
-@app.route('/brent')
+@app.route('/brent', methods=['GET', 'POST'])
 def brent():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        favorite_bird = request.form.get('favorite_bird')
+        
+        message = f"Favorite bird: {favorite_bird}"
+        new_contact = Contact(name=name, email=email, message=message, page_origin='brent')
+        try:
+            db.session.add(new_contact)
+            db.session.commit()
+            return render_template('brent.html', success=True)
+        except Exception as e:
+            print(f"Error adding contact: {e}")
+            return render_template('brent.html', error="There was an error submitting your form")
+    
     return render_template('brent.html')
 
 @app.route('/')
@@ -98,9 +145,28 @@ def update_bird(id):
     
     return render_template('update_bird.html', bird=bird)
 
-@app.route("/mason")
+@app.route("/mason", methods=['GET', 'POST'])
 def mason():
+    success = False
+    error = None
+    
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        bird_experience = request.form.get('bird_experience')
+        
+        new_contact = Contact(name=name, email=email, message=f"Bird experience: {bird_experience}", page_origin='mason')
+        try:
+            db.session.add(new_contact)
+            db.session.commit()
+            success = True
+        except Exception as e:
+            print(f"Error adding contact: {e}")
+            error = "There was an error submitting your form"
+    
     return render_template("mason.html",
+        success=success,
+        error=error,
         user={
             "name":"Mason Cable","role":"Dunwoody Student","company":"Dunwoody",
             "location":"Minneapolis, MN","email":"cabmass@dunwoody.edu",
@@ -119,5 +185,10 @@ def mason():
         current_year=2025
     )
 
+@app.route('/contacts')
+def contacts():
+    contacts = Contact.query.order_by(Contact.date_added.desc()).all()
+    return render_template('contacts.html', contacts=contacts)
+    
 if __name__ == '__main__':
     app.run(debug=True)
